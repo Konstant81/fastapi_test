@@ -1,0 +1,7 @@
+.vscode
+__pycache__
+.pylintrc
+.dockerignore
+commands.txt
+pg_data
+pg_data_test
