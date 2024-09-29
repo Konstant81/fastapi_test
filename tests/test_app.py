@@ -2,17 +2,19 @@ from fastapi.testclient import TestClient
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 from app.main import app
 from app.database import get_db, Base
 
+SQLALCHEMY_DATABASE_URL = "sqlite://"
 
-DATABASE_URL_TEST = "postgresql+psycopg2://postgres_test:postgres@localhost:5434/test_db"
-
-engine_test = create_engine(DATABASE_URL_TEST)
+engine_test = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
 
 SessionTest = sessionmaker(autocommit=False, autoflush=False, bind=engine_test)
-
-# Base.metadata.create_all(bind=engine_test)
 
 def override_get_db():
     db = SessionTest()
